@@ -1,4 +1,4 @@
-@Library("harilibs") _
+
 pipeline{
     agent any
     stages{
