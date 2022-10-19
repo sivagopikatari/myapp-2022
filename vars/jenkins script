@@ -1,0 +1,22 @@
+pipeline {
+    agent any
+    stages{
+        stage('git clone'){
+            steps{
+                git credentialsId: 'git-creds', url: 'https://github.com/sivagopikatari/myapp-2022.git'
+            }
+        }
+        stage('mvn package'){
+            steps{
+            sh 'mvn clean package -DskipTests=true '
+            }
+        }
+        stage('deploy tomcat'){
+            steps{
+             sshagent(['tomcat9']) {
+            sh  'scp -o StrictHostKeyChecking=no target/*.war ec2-user@172.31.37.64:/opt/tomcat9/webapps'
+        }
+            }
+        }
+    }
+}
